@@ -1,0 +1,67 @@
+name: Build and Deploy Actions 😎
+
+on: 
+  push:
+    branches:
+      - 'deploy'
+    tags: 
+      - v1.*
+  pull_request:
+    branches:
+      - 'deploy'
+    tags: 
+      - v1.*
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    name: Build my project ✨
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      # Cache
+      - uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-
+
+      # Test - NO TESTS, FUCK TESTS, ALL MY HOMIES HATE TESTING.
+      # - name: Run tests
+      #   uses: game-ci/unity-test-runner@v2
+      #   env:
+      #     UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      #   with:
+      #     githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build
+      - name: Build project
+        uses: game-ci/unity-builder@v2
+        with:
+          targetPlatform: WebGL
+          unityVersion: auto
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+      # Output
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Build
+          path: build
+
+
+
+      - name: Butler Push
+        uses: josephbmanley/butler-publish-itchio-action@v1.0.3
+        env:
+            BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+            CHANNEL: unity-webgl
+            ITCH_GAME: sgj-2023
+            ITCH_USER: ace777
+            PACKAGE: build/WebGL
