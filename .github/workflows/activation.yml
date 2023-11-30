@@ -12,9 +12,16 @@ jobs:
         uses: game-ci/unity-request-activation-file@v2
         with:
           customImage: 'unityci/editor:ubuntu-2022.3.5f1-base-3'
+          unityVersion: '2022.3.5f1'
       # Upload artifact (Unity_v20XX.X.XXXX.alf)
       - name: Expose as artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.getManualLicenseFile.outputs.filePath }}
+          path: ${{ steps.getManualLicenseFile.outputs.filePath }}
+
+      - name: Expose another artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: U
           path: ${{ steps.getManualLicenseFile.outputs.filePath }}
