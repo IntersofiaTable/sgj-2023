@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Assets.Scripts.Utilities;
+using System;
 using System.Diagnostics;
 using System.Linq;
-using Assets.Scripts.Utilities;
 using Debug = UnityEngine.Debug;
 
-public static class Nigger 
+public static class CoLogger 
 {
     public static void Log(string str)
     {

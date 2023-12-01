@@ -35,7 +35,7 @@ namespace GameState
 
         public override (bool, GameState) StartGame(GameState state)
         {
-            gameEventEmitter.Emit(new GameStartedEvent(state.Player.HP));
+            gameEventEmitter.Emit(new GameStartedEvent());
             
             return (true, state);
         }
