@@ -84,8 +84,8 @@ namespace Frontend.EventProcessing
 
         protected override void OnUpdate()
         {
-            timeTicker.Update(SystemAPI.Time.ElapsedTime);
-            Process();
+            //timeTicker.Update(SystemAPI.Time.ElapsedTime);
+            //Process();
         }
 
     }
