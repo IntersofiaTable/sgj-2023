@@ -20,12 +20,27 @@ namespace Frontend.Interaction
             GetMouseInput();
         }
 
+        private GameCell currentHighlightedCell;
+
 
         public void GetMouseInput()
         {
             var mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             var targetCell = gridGen.GetClosestCell(mouseRay);
+            if (targetCell is GameCell gameCell)
+            {
+                if (gameCell != currentHighlightedCell)
+                {
+                    if (currentHighlightedCell != null)
+                    {
+                        currentHighlightedCell.isHighlighted = false;
+                    }
+
+                    currentHighlightedCell = gameCell;
+                    gameCell.isHighlighted = true;
+                }
+            }
 
             if (cursor != null)
             {

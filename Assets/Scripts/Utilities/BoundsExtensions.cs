@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+using PlasticGui;
 using UnityEngine;
 
 namespace Assets.Scripts.Utilities
@@ -18,6 +21,11 @@ namespace Assets.Scripts.Utilities
             }
 
             return b;
+        }
+        
+        public static List<Renderer> GetAllRenderers(this MonoBehaviour mb)
+        {
+            return mb.transform.GetComponentsInChildren<Renderer>().ToList();
         }
     }
 }
