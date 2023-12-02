@@ -39,6 +39,7 @@ namespace GameState
                 {
                     PlayerCommand.GetCardOptions o => GetCardOptions(o, state),
                     PlayerCommand.PlaceCardCommand c => PlaceCard(c, state),
+                    PlayerCommand.EndTurnCommand e => EndTurn(e, state),
                     _ => (false, state)
                 };
 
@@ -241,5 +242,17 @@ namespace GameState
             return Array.Empty<(int,int)>();
         }
 
+        private (bool, GameState) EndTurn(EndTurnCommand command, GameState state)
+        {
+            if (state.Turn == state.MaxTurn)
+            {
+                return LoadMap(state, 0);
+            }
+
+            state.Turn++;
+            gameEventEmitter.Emit(new TurnUpdateEvent(state.Turn));
+
+            return DrawCards(state);
+        }
     }
 }
