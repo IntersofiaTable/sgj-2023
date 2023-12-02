@@ -27,8 +27,7 @@ namespace Assets.Scripts.Frontend.Interaction
 
         public void HandleCardUpdateReponse(CardOptionsResponse optionsResp)
         {
-            Targeting.SetAvailable(optionsResp.ValidPlacements);
-
+            Targeting.Instance.SetAvailable(optionsResp.ValidPlacements);
         }
     }
 }

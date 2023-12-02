@@ -11,7 +11,6 @@ namespace Frontend.Interaction
     public class Targeting : MonoBehaviour
     {
         private GridGenerator gridGen;
-            gridGen = FindObjectOfType<GridGenerator>();
 
         public GameObject cursor;
 
