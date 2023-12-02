@@ -59,6 +59,12 @@ namespace Frontend.EventProcessing
                         //thing.ProcessGameStartEvent(loadMapEvent);
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
+                    if (newArgs.Event is UpdateMapEvent updateMapEvent)
+                    {
+                        CoLogger.Log($"updateMapEvent {nameof(UpdateMapEvent)}");
+                        //thing.ProcessGameStartEvent(updateMapEvent);
+                        currentlyProcessingEvent.SetState(ProcessingState.Completed);
+                    }
                     if (newArgs.Event is DrawCardsEvent drawCardsEvent)
                     {
                         CoLogger.Log($"drawCardsEvent {nameof(DrawCardsEvent)}");
