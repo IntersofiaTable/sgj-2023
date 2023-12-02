@@ -22,12 +22,15 @@ namespace GameState
         public int PlayerControlled => Tiles.Select(x => x.Count(t => t.PlayerControlled)).Sum();
     }
 
-    public struct MapTile
+    public class MapTile
     {
-        public readonly bool AIContolled => !(BabaControlled || IngredientControlled);
-        public readonly bool PlayerControlled => BabaControlled || IngredientControlled;
+        public int X { get; set; }
+        public int Y { get; set; }
+        public bool AIContolled => !(BabaControlled || IngredientControlled);
+        public bool PlayerControlled => BabaControlled || IngredientControlled;
         public bool BabaControlled { get; set; }
         public bool IngredientControlled { get; set; }
+        public Card Card { get; set; }
     }
 }
 

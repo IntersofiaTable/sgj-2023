@@ -24,7 +24,7 @@ namespace Frontend.EventProcessing
         public void BeginProcessing(GameStateMachine machine)
         {
             this.machine = machine;
-            timeTicker = new TimeTicker(this.machine);
+            //timeTicker = new TimeTicker(this.machine);
             machine.Start();
         }
 
@@ -97,7 +97,7 @@ namespace Frontend.EventProcessing
         protected override void OnUpdate()
         {
             //timeTicker.Update(SystemAPI.Time.ElapsedTime);
-            //Process();
+            Process();
         }
 
     }

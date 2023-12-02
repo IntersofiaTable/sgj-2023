@@ -25,4 +25,6 @@ namespace GameState
     {
 
     }
+
+    public sealed record CardOptionsResponse(Card Card, (int X, int Y)[] ValidPlacements) : IGameEvent { }
 }

@@ -8,7 +8,7 @@ namespace GameState
     public class GameRules : GameRulesBase
     {
         private readonly int MapX = 10;
-        private readonly int MapY = 10;
+        private readonly int MapY = 12;
         private readonly int CardsToDraw = 3;
 
         private readonly IList<Card> babaCards;
@@ -25,7 +25,7 @@ namespace GameState
 
             random = new Random();
             this.next = next ?? random.Next;
-            this.nextFromZeroTo = (i) => next(0, i);
+            this.nextFromZeroTo = (i) => this.next(0, i);
         }
 
         public override void SetEmitter(IGameEventEmitter gameEventEmitter)
@@ -37,7 +37,7 @@ namespace GameState
         public override (bool,GameState) Act(IPlayerCommand command, GameState state) =>
             command switch
                 {
-
+                    PlayerCommand.GetCardOptions o => GetCardOptions(o, state),
                     _ => (false, state)
                 };
 
@@ -58,9 +58,9 @@ namespace GameState
         private (bool, GameState) LoadMap(GameState state, int mapId)
         {
             {
-                MapTile[][] g = Enumerable.Range(0, MapX)
-                    .Select(_ => Enumerable.Range(0, MapY)
-                        .Select(_ => new MapTile())
+                MapTile[][] g = Enumerable.Range(0, MapY)
+                    .Select(y => Enumerable.Range(0, MapX)
+                        .Select(x => new MapTile() { X = x, Y = y})
                         .ToArray())
                     .ToArray();
 
@@ -102,6 +102,61 @@ namespace GameState
             gameEventEmitter.Emit(new DrawCardsEvent(draw));
 
             return (true, state);
+        }
+
+        private (bool, GameState) GetCardOptions(GetCardOptions getCardOptions, GameState state)
+        {
+            Card card = getCardOptions.Card;
+            if (card.Type == CardType.Ingredient)
+            {
+                var tiles = state.Map.Tiles
+                    .SelectMany(x => x)
+                    .Where(x => x.BabaControlled)
+                    .Where(x => x.Card is null)
+                    .Select(x => (x.X, x.Y));
+
+                gameEventEmitter.Emit(new CardOptionsResponse(card, tiles.ToArray()));
+            }
+
+            if (card.Type == CardType.Baba)
+            {
+                List<(int X, int Y)> tiles = state.Map.Tiles
+                    .SelectMany(x => x)
+                    .Where(x => x.AIContolled) 
+                    //.Where(x => x.Card is null)
+                    .Select(x => (x.X, x.Y))
+                    .ToList();
+
+                List<(int X, int Y)> availableTiles = new List<(int X, int Y)>();
+                foreach (var tile in tiles)
+                {
+                    bool isGood = true;
+                    foreach (var control in card.ControlZone)
+                    {
+                        int checkY = tile.Y + control.Y;
+                        if( checkY > MapY) continue;
+                        if (checkY < 0) continue;
+
+                        int checkX = tile.X + control.X;
+                        if (checkX > MapX) continue;
+                        if (checkX < 0) continue;
+
+                        var checkTile = state.Map.Tiles[checkY][checkX];
+                        if (checkTile.PlayerControlled)
+                        {
+                            isGood = false;
+                            break;
+                        }
+                    }
+
+                    if (isGood) availableTiles.Add(tile);
+                }
+
+                gameEventEmitter.Emit(new CardOptionsResponse(card, availableTiles.ToArray()));
+
+            }
+
+            return (false, state);
         }
     }
 }
