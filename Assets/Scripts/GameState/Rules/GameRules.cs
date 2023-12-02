@@ -51,18 +51,18 @@ namespace GameState
         public override (bool, GameState) StartGame(GameState state)
         {
             gameEventEmitter.Emit(new GameStartedEvent());
-            (_, state) = LoadMap(state, 0);
+            (_, state) = LoadMap(state);
             return (true, state);
         }
 
         private T GetNextFromList<T>(IList<T> collection) => collection[nextFromZeroTo(collection.Count)];
 
-        private (bool, GameState) LoadMap(GameState state, int mapId)
+        private (bool, GameState) LoadMap(GameState state)
         {
             {
                 MapTile[][] g = Enumerable.Range(0, MapY)
                     .Select(y => Enumerable.Range(0, MapX)
-                        .Select(x => new MapTile() { X = x, Y = y})
+                        .Select(x => new MapTile { X = x, Y = y})
                         .ToArray())
                     .ToArray();
 
@@ -76,8 +76,9 @@ namespace GameState
                 state.BabaCount = 0;
                 state.Turn = 0;
                 state.BabasToDraw = 1;
+                state.MapNumber++;
 
-                gameEventEmitter.Emit(new LoadMapEvent(mapState));
+                gameEventEmitter.Emit(new LoadMapEvent(mapState, state.MapNumber));
             }
             
             (_, state) = DrawCards(state);
@@ -246,7 +247,17 @@ namespace GameState
         {
             if (state.Turn == state.MaxTurn)
             {
-                return LoadMap(state, 0);
+                state.AIHealth = Math.Max(0, state.AIHealth - state.Map.PlayerControlled);
+                gameEventEmitter.Emit(new EndMapEvent(state.AIHealth));
+
+                if (state.MapNumber == state.MaxMaps)
+                {
+                    gameEventEmitter.Emit(new GameEndedEvent(state.AIHealth == 0));
+                    state.Status = GameStatus.Over;
+                    return (true, state);
+                }
+
+                return LoadMap(state);
             }
 
             state.Turn++;

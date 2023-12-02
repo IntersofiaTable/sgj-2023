@@ -11,11 +11,10 @@ namespace GameState
 
     }
 
-    public sealed class GameEndedEvent : IGameEvent
-    {
-    }
+    public sealed record GameEndedEvent(bool Win) : IGameEvent { }
 
-    public sealed record LoadMapEvent(MapState MapState) : IGameEvent { }
+    public sealed record LoadMapEvent(MapState MapState, int MapNumber) : IGameEvent { }
+    public sealed record EndMapEvent(int AIHealth) : IGameEvent { }
 
     public sealed record DrawCardsEvent(ICollection<Card> Cards) : IGameEvent { }
 

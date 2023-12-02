@@ -7,12 +7,18 @@ namespace GameState
     {
         public GameStatus Status { get; set; }
 
+        public int MapNumber { get; set; } = 0;
         public MapState Map { get; set; }
+
         public int Turn { get; set; }
         public int MaxTurn { get; set; } = 5;
+
         public int BabaCount { get; set; } = 0;
         public bool HaveToDrawBaba => BabasToDraw > 0;
         public int BabasToDraw { get; set; } = 1;
+
+        public int AIHealth { get; set; } = 100;
+        public int MaxMaps { get; set; } = 5;
     }
 
     public class MapState
@@ -22,6 +28,7 @@ namespace GameState
         public MapTile[][] Tiles { get; set; }
 
         public int PlayerControlled => Tiles.Select(x => x.Count(t => t.PlayerControlled)).Sum();
+
     }
 
     public class MapTile
