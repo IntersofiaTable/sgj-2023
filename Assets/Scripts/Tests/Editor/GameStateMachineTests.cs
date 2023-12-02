@@ -1,5 +1,6 @@
 ﻿using GameState;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Tests.Editor
 {
@@ -8,7 +9,7 @@ namespace Tests.Editor
         [Test]
         public void StartNewGame_GiveProperNewGameEvents()
         {
-            var game = new GameStateMachine(new GameRules(), new GameState.GameState()
+            var game = new GameStateMachine(new GameRules(new List<Card>()), new GameState.GameState()
                 {
                    Status = GameStatus.Preparing,
                 });

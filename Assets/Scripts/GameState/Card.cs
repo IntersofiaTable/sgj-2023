@@ -6,7 +6,6 @@ namespace GameState
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int PictureId { get; set; }
         public CardType Type { get; set; }
         public (int X, int Y)[] ControlZone { get; set; } = Array.Empty<(int X, int Y)>();
     }

@@ -10,6 +10,7 @@ namespace GameState
         public int Turn { get; set; }
         public int MaxTurn { get; set; } = 10;
         public int BabaCount { get; set; } = 0;
+        public bool HaveToDrawBaba { get; set; } = true;
     }
 
     public class MapState

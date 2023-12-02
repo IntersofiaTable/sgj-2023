@@ -1,5 +1,8 @@
-﻿using Frontend.EventProcessing;
+﻿using Cysharp.Threading.Tasks;
+using Frontend.Config;
+using Frontend.EventProcessing;
 using GameState;
+using System.Linq;
 using Unity.Entities;
 using UnityEngine;
 
@@ -7,20 +10,29 @@ namespace Frontend
 {
     public class Bootstrapper : MonoBehaviour
     {
-        
+        public CardVisualConfig CardVisualConfig;
+
         public void Awake()
         {
             var processorSystem = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<GameEventProcessorSystem>();
-            var newGame = GameStateMachineFactory.GetDefaultMachine();
+            var newGame = GameStateMachineFactory.GetDefaultMachine(CardVisualConfig);
             processorSystem.BeginProcessing(newGame);
         }
     }
     
     public static class GameStateMachineFactory
     {
-        public static GameStateMachine GetDefaultMachine()
+        public static GameStateMachine GetDefaultMachine(CardVisualConfig cardVisualConfig)
         {
-            var gameRules = new GameRules();  
+            var cards = cardVisualConfig.CardData.Select(kvp => new Card()
+            {
+                Id = kvp.Key,
+                Type = kvp.Value.cardType,
+                Name = kvp.Value.name,
+                ControlZone = kvp.Value.area.Select(x => ((int)x.x, (int)x.y)).ToArray()
+            }).ToArray();
+
+            var gameRules = new GameRules(cards);  
             var gameState = new global::GameState.GameState()
             {
                 Status = GameStatus.Preparing,

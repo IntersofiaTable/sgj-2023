@@ -7,15 +7,22 @@ namespace GameState
 {
     public class GameRules : GameRulesBase
     {
-        private int MapX = 10;
-        private int MapY = 10;
+        private readonly int MapX = 10;
+        private readonly int MapY = 10;
+        private readonly int CardsToDraw = 3;
+
+        private readonly IList<Card> babaCards;
+        private readonly IList<Card> ingredientCards;
 
         private readonly Random random;
         private readonly Func<int, int, int> next;
         private readonly Func<int, int> nextFromZeroTo;
 
-        public GameRules(Func<int, int, int> next = null)
+        public GameRules(IList<Card> allCards, Func<int, int, int> next = null)
         {
+            this.babaCards = allCards.Where(x => x.Type == CardType.Baba).ToArray();
+            this.ingredientCards = allCards.Where(x => x.Type == CardType.Ingredient).ToArray();
+
             random = new Random();
             this.next = next ?? random.Next;
             this.nextFromZeroTo = (i) => next(0, i);
@@ -42,15 +49,13 @@ namespace GameState
         public override (bool, GameState) StartGame(GameState state)
         {
             gameEventEmitter.Emit(new GameStartedEvent());
-            LoadMap(0);
+            (_, state) = LoadMap(state, 0);
             return (true, state);
         }
 
-
         private T GetNextFromList<T>(IList<T> collection) => collection[nextFromZeroTo(collection.Count)];
 
-
-        private void LoadMap(int mapId)
+        private (bool, GameState) LoadMap(GameState state, int mapId)
         {
             {
                 MapTile[][] g = Enumerable.Range(0, MapX)
@@ -65,14 +70,38 @@ namespace GameState
                     X = MapX,
                     Y = MapY,
                 };
+                state.Map = mapState;
+                state.BabaCount = 0;
+                state.Turn = 0;
+                state.HaveToDrawBaba = true;
 
                 gameEventEmitter.Emit(new LoadMapEvent(mapState));
             }
+            
+            (_, state) = DrawCards(state);
 
+            return (true, state);
+
+        }
+
+        private (bool, GameState) DrawCards(GameState state)
+        {
+            List<Card> draw = new List<Card>();
+
+            if (state.HaveToDrawBaba)
             {
-
+                draw.Add(GetNextFromList(babaCards));
+                state.HaveToDrawBaba = false;
             }
 
+            for (int i = 0; i < CardsToDraw; i++)
+            {
+                draw.Add(GetNextFromList(ingredientCards));
+            }
+                
+            gameEventEmitter.Emit(new DrawCardsEvent(draw));
+
+            return (true, state);
         }
     }
 }

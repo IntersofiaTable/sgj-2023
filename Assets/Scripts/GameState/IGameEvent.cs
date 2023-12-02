@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace GameState
 {
     public interface IGameEvent
@@ -14,15 +16,9 @@ namespace GameState
     }
 
 
-    public sealed record LoadMapEvent(MapState MapState) : IGameEvent
-    {
-        
-    }
+    public sealed record LoadMapEvent(MapState MapState) : IGameEvent { }
 
-    public sealed class DrawCardsEvent : IGameEvent
-    {
-
-    }
+    public sealed record DrawCardsEvent(ICollection<Card> Cards) : IGameEvent { }
 
 
     public sealed class UpdateMapEvent : IGameEvent
