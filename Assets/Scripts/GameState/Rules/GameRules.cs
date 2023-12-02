@@ -74,7 +74,7 @@ namespace GameState
                 state.Map = mapState;
                 state.BabaCount = 0;
                 state.Turn = 0;
-                state.HaveToDrawBaba = true;
+                state.BabasToDraw = 1;
 
                 gameEventEmitter.Emit(new LoadMapEvent(mapState));
             }
@@ -91,8 +91,11 @@ namespace GameState
 
             if (state.HaveToDrawBaba)
             {
-                draw.Add(GetNextFromList(babaCards));
-                state.HaveToDrawBaba = false;
+                for (int i = 0; i < state.BabasToDraw; i++)
+                {
+                    draw.Add(GetNextFromList(babaCards));
+                }
+                state.BabasToDraw = 0;
             }
 
             for (int i = 0; i < CardsToDraw; i++)
@@ -173,7 +176,7 @@ namespace GameState
                     {
                         if (babaTile.BabaIsControllingList.All(x => x.Card != null))
                         {
-                            state.HaveToDrawBaba = true;
+                            state.BabasToDraw++;
                         }
                     }
                 }
