@@ -130,6 +130,8 @@ namespace GameState
             if (command.Card.Type is CardType.Baba)
             {
                 tile.BabaControlled = true;
+                tile.ThisToBabaList.Add(tile);
+
                 updatedTiles.Add(new TileUpdate(command.X, command.Y, true, command.Card));
                 foreach (var control in command.Card.ControlZone)
                 {
@@ -143,6 +145,8 @@ namespace GameState
 
                     var controlTile = state.Map.Tiles[checkY][checkX];
                     controlTile.BabaControlled = true;
+                    controlTile.ThisToBabaList.Add(tile);
+                    tile.BabaIsControllingList.Add(controlTile);
                     updatedTiles.Add(new TileUpdate(checkX, checkY, true, null));
 
                 }
@@ -162,7 +166,16 @@ namespace GameState
 
                     var controlTile = state.Map.Tiles[checkY][checkX];
                     controlTile.IngredientControlled = true;
+
                     updatedTiles.Add(new TileUpdate(checkX, checkY, true, null));
+
+                    foreach (var babaTile in controlTile.ThisToBabaList)
+                    {
+                        if (babaTile.BabaIsControllingList.All(x => x.Card != null))
+                        {
+                            state.HaveToDrawBaba = true;
+                        }
+                    }
                 }
             }
 

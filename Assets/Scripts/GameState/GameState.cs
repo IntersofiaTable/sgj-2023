@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GameState
@@ -31,6 +32,8 @@ namespace GameState
         public bool BabaControlled { get; set; }
         public bool IngredientControlled { get; set; }
         public Card Card { get; set; }
+        public List<MapTile> ThisToBabaList { get; set; } = new List<MapTile>();
+        public List<MapTile> BabaIsControllingList { get; set; } = new List<MapTile>();
     }
 }
 
