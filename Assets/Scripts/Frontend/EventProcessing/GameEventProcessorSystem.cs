@@ -72,6 +72,7 @@ namespace Frontend.EventProcessing
                     if (newArgs.Event is UpdateMapEvent updateMapEvent)
                     {
                         CoLogger.Log($"updateMapEvent {nameof(UpdateMapEvent)}");
+                        await mapProcessor.HandleUpdateMapState( updateMapEvent );
                         //thing.ProcessGameStartEvent(updateMapEvent);
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
@@ -134,6 +135,16 @@ namespace Frontend.EventProcessing
             //timeTicker.Update(SystemAPI.Time.ElapsedTime);
             Process();
         }
+
+    }
+
+    public static class GameColors
+    {
+
+        public static Color AIControlled = new Color(1, .75f, .2f, 1f);
+        public static Color PlayerControlled = new Color(0.1f, 1f, .4f, 1f);
+        public static Color Playable = new Color(0.2f, 1f, .8f, 1f);
+        public static Color Highlighted = new Color(1f, 1f, 0.2f, 1f);
 
     }
 

@@ -1,4 +1,6 @@
+using Assets.Scripts.Frontend.Interaction;
 using Cysharp.Threading.Tasks;
+using Frontend.Interaction;
 using GameState;
 using LevelGeneration;
 using UnityEngine;
@@ -13,7 +15,30 @@ namespace Frontend.EventProcessing
         {
             levelGen.width = mapEvt.MapState.X;
             levelGen.height = mapEvt.MapState.Y;
-            levelGen.GenerateLevel();
+            await levelGen.GenerateLevel();
         }
+        
+
+        public async UniTask HandleUpdateMapState(UpdateMapEvent updateEvt)
+        {
+            foreach (var tile in updateEvt.UpdatedTiles)
+            {
+                var cell = levelGen.GetCell(tile.X, tile.Y);
+                if(cell is GameCell gc)
+                {
+                    gc.Card = tile.card;
+                    gc.isPlayerControlled = tile.PlayerInControl;
+                }
+            }
+        }
+
+        public async UniTask HandleEndMapEvent(EndMapEvent endEvt)
+        {
+            if (AIController.Instance != null)
+            {
+                await AIController.Instance.SetNewHP(endEvt.AIHealth);
+            }
+        }
+
     }
 }

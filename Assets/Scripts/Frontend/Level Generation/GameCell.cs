@@ -2,21 +2,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Utilities;
+using Frontend.EventProcessing;
+using GameState;
 using UnityEngine;
 
 namespace LevelGeneration
 {
     public class GameCell : Cell
     {
-        public Color targetColor;
+        public bool isMouseOver;
+
+        public bool isActionPreview;
 
         public bool isHighlighted;
 
+        public bool isPlayerControlled;
+
         public float HighlightAmount = 1.5f;
 
-        public Color FinalColor => isHighlighted
-            ? new Color(targetColor.r * HighlightAmount, targetColor.g * HighlightAmount, targetColor.b * HighlightAmount)
-            : targetColor;
+        public Color TargetColor => 
+            isHighlighted       ? GameColors.Highlighted :
+            isActionPreview     ? GameColors.Playable :
+            isPlayerControlled  ? GameColors.PlayerControlled :
+            GameColors.AIControlled;
+
+        public Color FinalColor => isMouseOver
+            ? new Color(TargetColor.r * HighlightAmount, TargetColor.g * HighlightAmount, TargetColor.b * HighlightAmount)
+            : TargetColor;
+
+        public Card Card { get; internal set; }
 
         public Color currentColor;
 

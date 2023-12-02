@@ -55,6 +55,15 @@ namespace LevelGeneration
             return poses;
         }
 
+
+        public (int x, int y) GetCellPosition(Cell cell)
+        {
+            for (int i = 0; i <= width; i++)
+                for (int j = 0; j <= height; i++)
+                    if (cells[i, j] == cell) return (i, j);
+            return (0, 0);
+        }
+
         public Cell GetClosestCell(Ray raycastingRay)
         {
             var tops = new List<Vector3>();
@@ -175,6 +184,21 @@ namespace LevelGeneration
             }
 
             await Task.WhenAll(tasks);
+        }
+
+        internal Cell GetCell(int x, int y)
+        {
+            return cells[x, y];
+        }
+
+        internal List<Cell> GetAllCells()
+        {
+            List<Cell> ret = new List<Cell>();
+            foreach (var item in cells)
+            {
+                ret.Add(item);
+            }
+            return ret;
         }
     }
 }
