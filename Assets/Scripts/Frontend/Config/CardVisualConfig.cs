@@ -22,5 +22,6 @@ namespace Frontend.Config
         public Texture image;
         public string name;
         public CardType cardType;
+        public Vector2[] area;
     }
 }
