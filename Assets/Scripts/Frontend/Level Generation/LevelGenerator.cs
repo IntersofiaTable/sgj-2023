@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
@@ -57,9 +60,9 @@ namespace LevelGeneration
         /// <summary>
         /// Wave-function-collapse algorithm.
         /// </summary>
-        public void GenerateLevel()
+        public async UniTask GenerateLevel()
         {
-            RemoveGrid();
+            await RemoveGrid();
             GenerateGrid(this);
 
             var finalSeed = seed != -1 ? seed : Environment.TickCount;
@@ -105,11 +108,18 @@ namespace LevelGeneration
                 $"Wave-function-collapse algorithm finished in {stopwatch.Elapsed.TotalMilliseconds}ms (Seed: {finalSeed})");
 
             // instantiate module game objects
+            
+            List<Task> tasks = new List<Task>();
+            int cellcnt = 0;
             foreach (var cell in cells)
             {
                 var t = cell.transform;
+                var delay = animationTime / (height * width) * cellcnt;
                 Instantiate(cell.possibleModules[0].moduleGO, t.position, Quaternion.identity, t);
+                tasks.Add(t.transform.DOScaleY(1, 0.3f).SetDelay(delay).AsyncWaitForCompletion());
+                cellcnt++;
             }
+            await Task.WhenAll(tasks);
         }
 
         /// <summary>

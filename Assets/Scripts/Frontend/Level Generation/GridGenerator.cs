@@ -2,7 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Assets.Scripts.Utilities;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -13,6 +16,8 @@ namespace LevelGeneration
     /// </summary>
     public class GridGenerator : MonoBehaviour
     {
+        public float animationTime = 1.5f;
+        
         /// <summary>
         /// Width of grid.
         /// </summary>
@@ -120,6 +125,7 @@ namespace LevelGeneration
                 origin.z - height * scale.z / 2f + scale.z / 2
             );
 
+
             for (var x = 0; x < width; x++)
             for (var z = 0; z < height; z++)
             {
@@ -128,6 +134,7 @@ namespace LevelGeneration
                 // create new cell
                 var cellObj = Instantiate(cellPrefab, curPos, Quaternion.identity, gameObject.transform);
                 cellObj.name = $"({x}, {z})";
+                cellObj.transform.localScale = new Vector3(1f, 0.01f, 1f);
                 var cell = cellObj.GetComponent<Cell>();
                 cell.levelGenerator = levelGenerator;
                 cell.PopulateCell();
@@ -151,17 +158,23 @@ namespace LevelGeneration
                     bottomCell.neighbours[2] = cell;
                 }
             }
+
         }
 
         /// <summary>
         /// Destroys the current grid.
         /// </summary>
-        protected void RemoveGrid()
+        protected async UniTask RemoveGrid()
         {
-            foreach (Transform child in gameObject.transform)
+            List<Task> tasks = new List<Task>();
+            float step = animationTime / gameObject.transform.childCount;
+            for (int i = 0; i < gameObject.transform.childCount; i++)
             {
-                Destroy(child.gameObject);
+                var c = gameObject.transform.GetChild(i);
+                tasks.Add(c.DOScaleY(0.01f, 0.3f).SetDelay(step * i).AsyncWaitForCompletion());
             }
+
+            await Task.WhenAll(tasks);
         }
     }
 }

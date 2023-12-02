@@ -19,12 +19,15 @@ namespace Frontend.EventProcessing
 
         private TimeTicker timeTicker;
 
+        private MapEventProcessor mapProcessor;
+
         private TimeTickSuspender SuspendTick => new(timeTicker);
         
         public void BeginProcessing(GameStateMachine machine)
         {
             this.machine = machine;
             //timeTicker = new TimeTicker(this.machine);
+            mapProcessor = GameObject.FindObjectOfType<MapEventProcessor>();
             machine.Start();
         }
 
@@ -63,6 +66,7 @@ namespace Frontend.EventProcessing
                     {
                         CoLogger.Log($"loadMapEvent {nameof(LoadMapEvent)}");
                         //thing.ProcessGameStartEvent(loadMapEvent);
+                        await mapProcessor.HandleLevelEvent( loadMapEvent );
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
                     if (newArgs.Event is UpdateMapEvent updateMapEvent)

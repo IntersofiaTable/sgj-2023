@@ -7,8 +7,8 @@ namespace GameState
 {
     public class GameRules : GameRulesBase
     {
-        private readonly int MapX = 10;
-        private readonly int MapY = 12;
+        private readonly int MapX = 14;
+        private readonly int MapY = 20;
         private readonly int CardsToDraw = 3;
 
         private readonly IList<Card> babaCards;
