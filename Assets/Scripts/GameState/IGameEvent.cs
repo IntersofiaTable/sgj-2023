@@ -2,14 +2,9 @@ using System.Collections.Generic;
 
 namespace GameState
 {
-    public interface IGameEvent
-    {
-    }
+    public interface IGameEvent { }
 
-    public sealed class GameStartedEvent : IGameEvent
-    {
-
-    }
+    public sealed record GameStartedEvent : IGameEvent { }
 
     public sealed record GameEndedEvent(bool Win) : IGameEvent { }
 
@@ -18,7 +13,7 @@ namespace GameState
 
     public sealed record DrawCardsEvent(ICollection<Card> Cards) : IGameEvent { }
 
-    public sealed record UpdateMapEvent(ICollection<TileUpdate> updatedTiles) : IGameEvent { }
+    public sealed record UpdateMapEvent(ICollection<TileUpdate> UpdatedTiles) : IGameEvent { }
 
     public sealed record TileUpdate(int X, int Y, bool PlayerInControl, Card card) {}
 

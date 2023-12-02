@@ -31,7 +31,6 @@ namespace GameState
         public override void SetEmitter(IGameEventEmitter gameEventEmitter)
         {
             base.SetEmitter(gameEventEmitter);
-
         }
 
         public override (bool,GameState) Act(IPlayerCommand command, GameState state) =>
@@ -126,7 +125,6 @@ namespace GameState
             bool isTileValid = tileOptions.Any(x => x.X == command.X && x.Y == command.Y);
 
             if (isTileValid == false) return (false, state);
-
 
             List<TileUpdate> updatedTiles = new List<TileUpdate>();
 

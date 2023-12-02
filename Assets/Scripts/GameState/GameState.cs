@@ -28,7 +28,6 @@ namespace GameState
         public MapTile[][] Tiles { get; set; }
 
         public int PlayerControlled => Tiles.Select(x => x.Count(t => t.PlayerControlled)).Sum();
-
     }
 
     public class MapTile

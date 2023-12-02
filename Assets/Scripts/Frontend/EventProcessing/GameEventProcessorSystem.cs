@@ -77,6 +77,8 @@ namespace Frontend.EventProcessing
                         //thing.ProcessGameStartEvent(cardOptionsResponse);
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
+
+
                     CoLogger.Log("async processing finished");
                 }
             }
