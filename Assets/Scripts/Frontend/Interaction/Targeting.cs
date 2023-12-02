@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Assets.Scripts.Frontend.Interaction;
 using Frontend.EventProcessing;
 using GameState.PlayerCommand;
 using LevelGeneration;
@@ -52,7 +53,7 @@ namespace Frontend.Interaction
                 {
                     var processorSystem = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<GameEventProcessorSystem>();
                     var pos = gridGen.GetCellPosition(gameCell);
-                    //processorSystem.Act(new PlaceCardCommand() { X = pos.x, Y = pos.y, Card =  });
+                    processorSystem.Act(new PlaceCardCommand(X: pos.x, Y: pos.y, Card: CardsController.Instance.Cards.First())) ;
                 }
             }
 

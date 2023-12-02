@@ -1,4 +1,5 @@
-﻿using Frontend.Interaction;
+﻿using Cysharp.Threading.Tasks;
+using Frontend.Interaction;
 using GameState;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace Assets.Scripts.Frontend.Interaction
             Instance = this;
         }
 
-        public void HandleCardsEvent(DrawCardsEvent drawEvt)
+        public async UniTask HandleCardsEvent(DrawCardsEvent drawEvt)
         {
             Cards = drawEvt.Cards.ToList();
         }

@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using Assets.Scripts.Frontend.Interaction;
+using Cysharp.Threading.Tasks;
 using GameState;
 using GameState.PlayerCommand;
 using System;
@@ -60,6 +61,7 @@ namespace Frontend.EventProcessing
                     {
                         CoLogger.Log($"gameEndedEvent{nameof(GameEndedEvent)}");
                         //thing.ProcessGameStartEvent(gameEndedEvent);
+                        Debug.Log("Game Over");
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
                     if (newArgs.Event is LoadMapEvent loadMapEvent)
@@ -80,24 +82,28 @@ namespace Frontend.EventProcessing
                     {
                         CoLogger.Log($"endMapEvent {nameof(EndMapEvent)}");
                         //thing.ProcessGameStartEvent(endMapEvent);
+                        await mapProcessor.HandleEndMapEvent( endMapEvent );
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
                     if (newArgs.Event is DrawCardsEvent drawCardsEvent)
                     {
                         CoLogger.Log($"drawCardsEvent {nameof(DrawCardsEvent)}");
                         //thing.ProcessGameStartEvent(drawCardsEvent);
+                        CardsController.Instance.HandleCardsEvent(drawCardsEvent);
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
                     if (newArgs.Event is CardOptionsResponse cardOptionsResponse)
                     {
                         CoLogger.Log($"cardOptionsResponse {nameof(CardOptionsResponse)}");
                         //thing.ProcessGameStartEvent(cardOptionsResponse);
+                        CardsController.Instance.HandleCardUpdateReponse(cardOptionsResponse);
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
                     if (newArgs.Event is TurnUpdateEvent turnUpdateEvent)
                     {
                         CoLogger.Log($"turnUpdateEvent {nameof(TurnUpdateEvent)}");
                         //thing.ProcessGameStartEvent(cardOptionsResponse);
+                        Debug.Log($"Turn # {turnUpdateEvent.Turn}");
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
 
