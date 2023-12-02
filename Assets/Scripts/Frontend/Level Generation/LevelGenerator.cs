@@ -44,18 +44,18 @@ namespace LevelGeneration
         [Tooltip("If set to -1 a random seed will be selected for every level generation.")]
         public int seed;
 
-        private void Start()
-        {
-            GenerateLevel();
-        }
+        //private void Start()
+        //{
+        //    GenerateLevel();
+        //}
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.G))
-            {
-                GenerateLevel();
-            }
-        }
+        //private void Update()
+        //{
+        //    if (Input.GetKeyDown(KeyCode.G))
+        //    {
+        //        GenerateLevel();
+        //    }
+        //}
 
         /// <summary>
         /// Wave-function-collapse algorithm.
