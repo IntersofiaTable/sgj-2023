@@ -168,6 +168,16 @@ namespace GameState
             if (command.Card.Type is CardType.Ingredient)
             {
                 tile.IngredientControlled = true;
+                updatedTiles.Add(new TileUpdate(command.X, command.Y, true, command.Card));
+
+                foreach (var babaTile in tile.ThisToBabaList)
+                {
+                    if (babaTile.BabaIsControllingList.All(x => x.Card != null))
+                    {
+                        state.BabasToDraw++;
+                    }
+                }
+                
                 foreach (var control in command.Card.ControlZone)
                 {
                     int checkY = tile.Y + control.Y;

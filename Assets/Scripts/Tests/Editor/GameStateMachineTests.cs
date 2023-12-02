@@ -1,4 +1,5 @@
-﻿using GameState;
+﻿using System;
+using GameState;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,7 +63,7 @@ namespace Tests.Editor
             game.Start();
 
 
-            ICollection<Card> playCards;
+            ICollection<Card> playCards = Array.Empty<Card>();
             
             AssertExtender.Collection(game.EventQueue.ToArray(),
                 evt =>
@@ -114,8 +115,45 @@ namespace Tests.Editor
                 {
                     Assert.IsInstanceOf<DrawCardsEvent>(evt.Event);
                     var drawCardsEvent = evt.Event as DrawCardsEvent;
-
+                    playCards = drawCardsEvent.Cards;
                 });
+            game.EventQueue.Clear();
+
+            
+            game.Act(new GetCardOptions(playCards.First()));
+            AssertExtender.Collection(game.EventQueue.ToArray(),
+                evt =>
+                {
+                    Assert.IsInstanceOf<CardOptionsResponse>(evt.Event);
+                    var cardOptionsResponse = evt.Event as CardOptionsResponse;
+
+                    Assert.AreEqual(cardOptionsResponse.ValidPlacements.Single(), (0, 0));
+                });
+            game.EventQueue.Clear();
+
+            game.Act(new PlaceCardCommand(0, 0, playCards.First()));
+            AssertExtender.Collection(game.EventQueue.ToArray(),                
+                evt =>
+                {
+                    Assert.IsInstanceOf<UpdateMapEvent>(evt.Event);
+                    var updateMapEvent = evt.Event as UpdateMapEvent;
+                });
+            game.EventQueue.Clear();
+
+            game.Act(new EndTurnCommand());
+            AssertExtender.Collection(game.EventQueue.ToArray(),                
+                evt =>
+                {
+                    Assert.IsInstanceOf<TurnUpdateEvent>(evt.Event);
+                    var turnUpdateEvent = evt.Event as TurnUpdateEvent;
+
+                },evt =>
+                {
+                    Assert.IsInstanceOf<DrawCardsEvent>(evt.Event);
+                    var drawCardsEvent = evt.Event as DrawCardsEvent;
+                    playCards = drawCardsEvent.Cards;
+                });
+            game.EventQueue.Clear();
         }
     }
 }
