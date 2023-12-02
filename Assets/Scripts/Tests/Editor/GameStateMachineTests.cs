@@ -91,6 +91,31 @@ namespace Tests.Editor
                     var cardOptionsResponse = evt.Event as CardOptionsResponse;
 
                 });
+            game.EventQueue.Clear();
+
+            game.Act(new PlaceCardCommand(0, 1, babaCard1));
+            AssertExtender.Collection(game.EventQueue.ToArray(),                
+                evt =>
+            {
+                Assert.IsInstanceOf<UpdateMapEvent>(evt.Event);
+                var updateMapEvent = evt.Event as UpdateMapEvent;
+
+            });
+            game.EventQueue.Clear();
+
+            game.Act(new EndTurnCommand());
+            AssertExtender.Collection(game.EventQueue.ToArray(),                
+                evt =>
+                {
+                    Assert.IsInstanceOf<TurnUpdateEvent>(evt.Event);
+                    var turnUpdateEvent = evt.Event as TurnUpdateEvent;
+
+                },evt =>
+                {
+                    Assert.IsInstanceOf<DrawCardsEvent>(evt.Event);
+                    var drawCardsEvent = evt.Event as DrawCardsEvent;
+
+                });
         }
     }
 }
