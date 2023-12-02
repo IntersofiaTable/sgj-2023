@@ -38,6 +38,7 @@ namespace GameState
             command switch
                 {
                     PlayerCommand.GetCardOptions o => GetCardOptions(o, state),
+                    PlayerCommand.PlaceCardCommand c => PlaceCard(c, state),
                     _ => (false, state)
                 };
 
@@ -107,6 +108,71 @@ namespace GameState
         private (bool, GameState) GetCardOptions(GetCardOptions getCardOptions, GameState state)
         {
             Card card = getCardOptions.Card;
+
+            var tiles = GetCardOptions(card, state);
+            gameEventEmitter.Emit(new CardOptionsResponse(card, tiles));
+
+            return (false, state);
+        }
+
+        private (bool, GameState) PlaceCard(PlaceCardCommand command, GameState state)
+        {
+            var tileOptions = GetCardOptions(command.Card, state);
+            bool isTileValid = tileOptions.Any(x => x.X == command.X && x.Y == command.Y);
+
+            if (isTileValid == false) return (false, state);
+
+
+            List<TileUpdate> updatedTiles = new List<TileUpdate>();
+
+            var tile = state.Map.Tiles[command.Y][command.X];
+            tile.Card = command.Card;
+            if (command.Card.Type is CardType.Baba)
+            {
+                tile.BabaControlled = true;
+                updatedTiles.Add(new TileUpdate(command.X, command.Y, true, command.Card));
+                foreach (var control in command.Card.ControlZone)
+                {
+                    int checkY = tile.Y + control.Y;
+                    if (checkY > MapY) continue;
+                    if (checkY < 0) continue;
+
+                    int checkX = tile.X + control.X;
+                    if (checkX > MapX) continue;
+                    if (checkX < 0) continue;
+
+                    var controlTile = state.Map.Tiles[checkY][checkX];
+                    controlTile.BabaControlled = true;
+                    updatedTiles.Add(new TileUpdate(checkX, checkY, true, null));
+
+                }
+            }
+            if (command.Card.Type is CardType.Ingredient)
+            {
+                tile.IngredientControlled = true;
+                foreach (var control in command.Card.ControlZone)
+                {
+                    int checkY = tile.Y + control.Y;
+                    if (checkY > MapY) continue;
+                    if (checkY < 0) continue;
+
+                    int checkX = tile.X + control.X;
+                    if (checkX > MapX) continue;
+                    if (checkX < 0) continue;
+
+                    var controlTile = state.Map.Tiles[checkY][checkX];
+                    controlTile.IngredientControlled = true;
+                    updatedTiles.Add(new TileUpdate(checkX, checkY, true, null));
+                }
+            }
+
+            gameEventEmitter.Emit(new UpdateMapEvent(updatedTiles));
+
+            return (true, state);
+        }
+
+        private (int X, int Y)[] GetCardOptions(Card card, GameState state)
+        {
             if (card.Type == CardType.Ingredient)
             {
                 var tiles = state.Map.Tiles
@@ -115,14 +181,14 @@ namespace GameState
                     .Where(x => x.Card is null)
                     .Select(x => (x.X, x.Y));
 
-                gameEventEmitter.Emit(new CardOptionsResponse(card, tiles.ToArray()));
+                return tiles.ToArray();
             }
 
             if (card.Type == CardType.Baba)
             {
                 List<(int X, int Y)> tiles = state.Map.Tiles
                     .SelectMany(x => x)
-                    .Where(x => x.AIContolled) 
+                    .Where(x => x.AIContolled)
                     //.Where(x => x.Card is null)
                     .Select(x => (x.X, x.Y))
                     .ToList();
@@ -134,7 +200,7 @@ namespace GameState
                     foreach (var control in card.ControlZone)
                     {
                         int checkY = tile.Y + control.Y;
-                        if( checkY > MapY) continue;
+                        if (checkY > MapY) continue;
                         if (checkY < 0) continue;
 
                         int checkX = tile.X + control.X;
@@ -152,11 +218,12 @@ namespace GameState
                     if (isGood) availableTiles.Add(tile);
                 }
 
-                gameEventEmitter.Emit(new CardOptionsResponse(card, availableTiles.ToArray()));
+                return availableTiles.ToArray();
 
             }
 
-            return (false, state);
+            return Array.Empty<(int,int)>();
         }
+
     }
 }

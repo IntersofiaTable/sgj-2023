@@ -65,6 +65,12 @@ namespace Frontend.EventProcessing
                         //thing.ProcessGameStartEvent(drawCardsEvent);
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
+                    if (newArgs.Event is CardOptionsResponse cardOptionsResponse)
+                    {
+                        CoLogger.Log($"cardOptionsResponse {nameof(CardOptionsResponse)}");
+                        //thing.ProcessGameStartEvent(cardOptionsResponse);
+                        currentlyProcessingEvent.SetState(ProcessingState.Completed);
+                    }
                     CoLogger.Log("async processing finished");
                 }
             }
