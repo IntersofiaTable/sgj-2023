@@ -15,7 +15,9 @@ namespace Frontend.EventProcessing
         {
             levelGen.width = mapEvt.MapState.X;
             levelGen.height = mapEvt.MapState.Y;
+            Debug.Log("Generating Level.");
             await levelGen.GenerateLevel();
+            Debug.Log("Level Generated");
         }
         
 

@@ -23,12 +23,19 @@ namespace Assets.Scripts.Frontend.Interaction
 
         public async UniTask HandleCardsEvent(DrawCardsEvent drawEvt)
         {
+            Debug.Log("Setting Cards.");
             Cards = drawEvt.Cards.ToList();
+            Debug.Log("Cards + \n" + string.Join(" ", drawEvt.Cards.Select(c => $"ID : {c.Id} Name: {c.Name}\n")));
+            await UniTask.Yield();
+            Debug.Log("Cards Set.");
         }
 
-        public void HandleCardUpdateReponse(CardOptionsResponse optionsResp)
+        public async UniTask HandleCardUpdateReponse(CardOptionsResponse optionsResp)
         {
+            Debug.Log("Updating Cards.");
             Targeting.Instance.SetAvailable(optionsResp.ValidPlacements);
+            await UniTask.Yield();
+            Debug.Log("Cards Updated.");
         }
     }
 }

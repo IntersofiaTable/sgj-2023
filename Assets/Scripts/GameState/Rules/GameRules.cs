@@ -237,11 +237,11 @@ namespace GameState
                     foreach (var control in card.ControlZone)
                     {
                         int checkY = tile.Y + control.Y;
-                        if (checkY > MapY) continue;
+                        if (checkY >= MapY) continue;
                         if (checkY < 0) continue;
 
                         int checkX = tile.X + control.X;
-                        if (checkX > MapX) continue;
+                        if (checkX >= MapX) continue;
                         if (checkX < 0) continue;
 
                         var checkTile = state.Map.Tiles[checkY][checkX];

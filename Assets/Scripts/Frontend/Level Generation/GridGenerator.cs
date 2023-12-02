@@ -58,14 +58,15 @@ namespace LevelGeneration
 
         public (int x, int y) GetCellPosition(Cell cell)
         {
-            for (int i = 0; i <= width; i++)
-                for (int j = 0; j <= height; i++)
-                    if (cells[i, j] == cell) return (i, j);
+            for (int i = 0; i < width; i++)
+                for (int j = 0; j < height; j++)
+                    if (cells[i, j].Equals(cell)) return (i, j);
             return (0, 0);
         }
 
         public Cell GetClosestCell(Ray raycastingRay)
         {
+            if(cells == null || cells.Length == 0) return null;
             var tops = new List<Vector3>();
             foreach (var cell in cells)
             {
@@ -175,15 +176,15 @@ namespace LevelGeneration
         /// </summary>
         protected async UniTask RemoveGrid()
         {
-            List<Task> tasks = new List<Task>();
+            List<UniTask> tasks = new List<UniTask>();
             float step = animationTime / gameObject.transform.childCount;
             for (int i = 0; i < gameObject.transform.childCount; i++)
             {
                 var c = gameObject.transform.GetChild(i);
-                tasks.Add(c.DOScaleY(0.01f, 0.3f).SetDelay(step * i).AsyncWaitForCompletion());
+                tasks.Add(c.DOScaleY(0.01f, 0.3f).SetDelay(step * i).AsyncWaitForCompletion().AsUniTask());
             }
 
-            await Task.WhenAll(tasks);
+            await UniTask.WhenAll(tasks);
         }
 
         internal Cell GetCell(int x, int y)

@@ -36,6 +36,7 @@ namespace Frontend.Interaction
             var mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             var targetCell = gridGen.GetClosestCell(mouseRay);
+            if(targetCell == null) { return; }
             if (targetCell is GameCell gameCell)
             {
                 if (gameCell != currentHighlightedCell)

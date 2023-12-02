@@ -62,7 +62,10 @@ namespace LevelGeneration
         /// </summary>
         public async UniTask GenerateLevel()
         {
+            Debug.Log("removing grid.");
             await RemoveGrid();
+            Debug.Log("grid removed.");
+
             GenerateGrid(this);
 
             var finalSeed = seed != -1 ? seed : Environment.TickCount;
@@ -109,17 +112,17 @@ namespace LevelGeneration
 
             // instantiate module game objects
             
-            List<Task> tasks = new List<Task>();
+            List<UniTask> tasks = new List<UniTask>();
             int cellcnt = 0;
             foreach (var cell in cells)
             {
                 var t = cell.transform;
                 var delay = animationTime / (height * width) * cellcnt;
                 Instantiate(cell.possibleModules[0].moduleGO, t.position, Quaternion.identity, t);
-                tasks.Add(t.transform.DOScaleY(1, 0.3f).SetDelay(delay).AsyncWaitForCompletion());
+                tasks.Add(t.transform.DOScaleY(1, 0.3f).SetDelay(delay).AsyncWaitForCompletion().AsUniTask());
                 cellcnt++;
             }
-            await Task.WhenAll(tasks);
+            await UniTask.WhenAll(tasks);
         }
 
         /// <summary>

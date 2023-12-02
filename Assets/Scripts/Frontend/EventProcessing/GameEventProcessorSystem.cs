@@ -22,6 +22,8 @@ namespace Frontend.EventProcessing
 
         private MapEventProcessor mapProcessor;
 
+        private CardsController cardsController;
+
         private TimeTickSuspender SuspendTick => new(timeTicker);
         
         public void BeginProcessing(GameStateMachine machine)
@@ -29,6 +31,7 @@ namespace Frontend.EventProcessing
             this.machine = machine;
             //timeTicker = new TimeTicker(this.machine);
             mapProcessor = GameObject.FindObjectOfType<MapEventProcessor>();
+            cardsController = GameObject.FindObjectOfType<CardsController>();
             machine.Start();
         }
 
@@ -89,14 +92,14 @@ namespace Frontend.EventProcessing
                     {
                         CoLogger.Log($"drawCardsEvent {nameof(DrawCardsEvent)}");
                         //thing.ProcessGameStartEvent(drawCardsEvent);
-                        CardsController.Instance.HandleCardsEvent(drawCardsEvent);
+                        await cardsController.HandleCardsEvent(drawCardsEvent);
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
                     if (newArgs.Event is CardOptionsResponse cardOptionsResponse)
                     {
                         CoLogger.Log($"cardOptionsResponse {nameof(CardOptionsResponse)}");
                         //thing.ProcessGameStartEvent(cardOptionsResponse);
-                        CardsController.Instance.HandleCardUpdateReponse(cardOptionsResponse);
+                        await cardsController.HandleCardUpdateReponse(cardOptionsResponse);
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
                     if (newArgs.Event is TurnUpdateEvent turnUpdateEvent)
