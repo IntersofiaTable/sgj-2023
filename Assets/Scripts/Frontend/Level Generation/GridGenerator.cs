@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Assets.Scripts.Utilities;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -31,6 +33,71 @@ namespace LevelGeneration
         /// </summary>
         protected Cell[,] cells;
 
+
+        public Vector3 GridToWorldPosition(int x, int y)
+        {
+            var cell = cells[x, y];
+            return cell.transform.position ;
+        }
+
+        public List<Vector3> GetAllCellPositions()
+        {
+            List<Vector3> poses = new List<Vector3>();
+            foreach (var cell in cells)
+            {
+                // poses.Add(GetTopOfGridCell());
+            }
+            return poses;
+        }
+
+        public Cell GetClosestCell(Ray raycastingRay)
+        {
+            var tops = new List<Vector3>();
+            foreach (var cell in cells)
+            {
+                var newTop = GetTopOfGridCell(cell);
+                if (tops.Any(t => Vector3.Distance(newTop, t) < 0.01f)) continue ;
+                tops.Add(newTop);
+            }
+            
+            var allTops = new Dictionary<Cell, Vector3>();
+            foreach (var cell in cells)
+            {
+                var newTop = GetTopOfGridCell(cell);
+                allTops.Add(cell, newTop);
+            }
+
+            Cell candidate = null;
+            float distance = 0;
+            List<Vector3> candidates = new List<Vector3>();
+            foreach (var top in tops)
+            {
+                Plane p = new Plane(Vector3.up, top);
+                p.Raycast(raycastingRay, out var dist);
+                var pos = raycastingRay.GetPoint(dist);
+                candidates.Add(pos);
+            }
+            
+            // Dictionary<C:ell, Vector3>
+
+            var result = candidates.SelectMany(c => allTops.Select(t => (t.Key, Vector3.Distance(t.Value, c))))
+                .OrderBy(can => can.Item2)
+                .First();
+
+            return result.Key;
+        }
+        
+        public Vector3 GetTopOfGridCell(int x, int y)
+        {
+            var cell = cells[x, y];
+            return cell.transform.position + new Vector3(0,cell.GetCompleteBounds().size.y,0);
+        }
+        
+        public Vector3 GetTopOfGridCell(Cell cell)
+        {
+            return cell.transform.position + new Vector3(0,cell.GetCompleteBounds().size.y,0);
+        }
+        
         /// <summary>
         /// Generates the two-dimensional grid.
         /// </summary>
