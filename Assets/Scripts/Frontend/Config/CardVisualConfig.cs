@@ -19,7 +19,7 @@ namespace Frontend.Config
     [Serializable]
     public class CardVisualData
     {
-        public Texture image;
+        public Sprite image;
         public string name;
         public CardType cardType;
         public Vector2[] area;
