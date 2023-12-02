@@ -32,7 +32,10 @@ namespace Frontend
                 ControlZone = kvp.Value.area.Select(x => ((int)x.x, (int)x.y)).ToArray()
             }).ToArray();
 
-            var gameRules = new GameRules(cards);  
+            var gameRules = new GameRules(cards, new GameOptions()
+            {
+                
+            });  
             var gameState = new global::GameState.GameState()
             {
                 Status = GameStatus.Preparing,

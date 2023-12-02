@@ -5,11 +5,18 @@ using System.Linq;
 
 namespace GameState
 {
+    public class GameOptions
+    {
+        public int MapX { get; set; } = 14;
+        public int MapY{ get; set; } = 20;
+        public int CardsToDraw { get; set; }= 3;
+    }
+    
     public class GameRules : GameRulesBase
     {
-        private readonly int MapX = 14;
-        private readonly int MapY = 20;
-        private readonly int CardsToDraw = 3;
+        private readonly int MapX;
+        private readonly int MapY;
+        private readonly int CardsToDraw;
 
         private readonly IList<Card> babaCards;
         private readonly IList<Card> ingredientCards;
@@ -18,8 +25,12 @@ namespace GameState
         private readonly Func<int, int, int> next;
         private readonly Func<int, int> nextFromZeroTo;
 
-        public GameRules(IList<Card> allCards, Func<int, int, int> next = null)
+        public GameRules(IList<Card> allCards, GameOptions gameOptions, Func<int, int, int> next = null)
         {
+            this.MapX = gameOptions.MapX;
+            this.MapY = gameOptions.MapY;
+            this.CardsToDraw = gameOptions.CardsToDraw;
+            
             this.babaCards = allCards.Where(x => x.Type == CardType.Baba).ToArray();
             this.ingredientCards = allCards.Where(x => x.Type == CardType.Ingredient).ToArray();
 
