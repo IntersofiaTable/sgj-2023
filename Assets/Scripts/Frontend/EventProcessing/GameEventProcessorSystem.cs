@@ -43,14 +43,20 @@ namespace Frontend.EventProcessing
             {
                 if( machine.EventQueue.Count > 0 )
                 {
-                    CoLogger.Log("async processing");
+                    //CoLogger.Log("async processing");
                     var newArgs = machine.EventQueue.Dequeue();
                     currentlyProcessingEvent = new EventProcessingState(newArgs);
-                    CoLogger.Log($"processing event of type {newArgs.Event.GetType()} with id {newArgs.Id}");
+                    //CoLogger.Log($"processing event of type {newArgs.Event.GetType()} with id {newArgs.Id}");
                     if (newArgs.Event is GameStartedEvent gameStartedEvent)
                     {
-                        CoLogger.Log($"do nothing {nameof(GameStartedEvent)}");
+                        CoLogger.Log($"gameStartedEvent {nameof(GameStartedEvent)}");
                         //thing.ProcessGameStartEvent(gameStartedEvent);
+                        currentlyProcessingEvent.SetState(ProcessingState.Completed);
+                    }
+                    if (newArgs.Event is GameEndedEvent gameEndedEvent)
+                    {
+                        CoLogger.Log($"gameEndedEvent{nameof(GameEndedEvent)}");
+                        //thing.ProcessGameStartEvent(gameEndedEvent);
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
                     if (newArgs.Event is LoadMapEvent loadMapEvent)
@@ -65,6 +71,12 @@ namespace Frontend.EventProcessing
                         //thing.ProcessGameStartEvent(updateMapEvent);
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
+                    if (newArgs.Event is EndMapEvent endMapEvent)
+                    {
+                        CoLogger.Log($"endMapEvent {nameof(EndMapEvent)}");
+                        //thing.ProcessGameStartEvent(endMapEvent);
+                        currentlyProcessingEvent.SetState(ProcessingState.Completed);
+                    }
                     if (newArgs.Event is DrawCardsEvent drawCardsEvent)
                     {
                         CoLogger.Log($"drawCardsEvent {nameof(DrawCardsEvent)}");
@@ -77,9 +89,14 @@ namespace Frontend.EventProcessing
                         //thing.ProcessGameStartEvent(cardOptionsResponse);
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
+                    if (newArgs.Event is TurnUpdateEvent turnUpdateEvent)
+                    {
+                        CoLogger.Log($"turnUpdateEvent {nameof(TurnUpdateEvent)}");
+                        //thing.ProcessGameStartEvent(cardOptionsResponse);
+                        currentlyProcessingEvent.SetState(ProcessingState.Completed);
+                    }
 
-
-                    CoLogger.Log("async processing finished");
+                    //CoLogger.Log("async processing finished");
                 }
             }
             isProcessing = false;
