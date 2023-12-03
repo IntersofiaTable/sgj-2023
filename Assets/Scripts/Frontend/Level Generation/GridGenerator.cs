@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Assets.Scripts.Utilities;
+﻿using Assets.Scripts.Utilities;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace LevelGeneration
 {
@@ -191,6 +187,7 @@ namespace LevelGeneration
         {
             if (x >= cells.GetLength(0) || y >= cells.GetLength(1)) return null;
             if (cells == null) return null;
+            if(x < 0 || y < 0) return null;
             return cells[x, y];
         }
 
