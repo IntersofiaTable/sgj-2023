@@ -23,6 +23,7 @@ public static class CoLogger
 
     public static void Log(LogLevel level, string log )
     {
+#if UNITY_EDITOR
         var methodInfo = new StackTrace().GetFrame(2).GetMethod();
         var className = methodInfo.DeclaringType.FullName.Split(".").Last();
         if(className.IndexOf("+") > 0){
@@ -44,6 +45,7 @@ public static class CoLogger
             default:
                 throw new ArgumentOutOfRangeException(nameof(level), level, null);
         }
+#endif
     }
 }
 
