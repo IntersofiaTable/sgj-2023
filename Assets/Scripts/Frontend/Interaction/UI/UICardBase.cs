@@ -21,7 +21,7 @@ namespace Assets.Scripts.Frontend.Interaction.UI
 
         public TMP_Text CardDescription;
 
-        public CardState state;
+        public CardState state { get; private set; }
 
         public event Action<CardState> CardStateChanged;
 
@@ -33,7 +33,7 @@ namespace Assets.Scripts.Frontend.Interaction.UI
             Debug.Log("Selected");
             if (state == CardState.Idle || state == CardState.Highlighted)
             {
-                state = CardState.Pressed;
+                SetState(CardState.Pressed);
             }
         }
 
@@ -41,7 +41,7 @@ namespace Assets.Scripts.Frontend.Interaction.UI
         {
             Debug.Log("highlighted");
             if (state == CardState.Idle) {
-                state = CardState.Highlighted;
+                SetState(CardState.Highlighted);
             }
         }
 
@@ -49,8 +49,14 @@ namespace Assets.Scripts.Frontend.Interaction.UI
         {
             Debug.Log("highlighted");
             if (state == CardState.Highlighted) {
-                state = CardState.Idle;
+                SetState(CardState.Idle);
             }
+        }
+
+        public void SetState(CardState state)
+        {
+            this.state = state;
+            CardStateChanged?.Invoke(state);
         }
 
 

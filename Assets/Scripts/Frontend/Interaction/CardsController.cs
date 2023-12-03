@@ -34,7 +34,13 @@ namespace Assets.Scripts.Frontend.Interaction
         {
             if (Cards.Any(c => c.Id == card.Id))
             {
+                Debug.Log("Card Selected");
                 SelectedCard = Cards.First(c => c.Id == card.Id);
+            }
+            else
+            {
+                Debug.Log("Card NOT Selected");
+
             }
         }
 
@@ -59,11 +65,31 @@ namespace Assets.Scripts.Frontend.Interaction
 
         public void PlayCurrentCard(int X, int Y)
         {
-            if(SelectedCard == null) { return; }
+            if(SelectedCard == null) { Debug.Log("No Card Selected"); return; }
             var processorSystem = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<GameEventProcessorSystem>();
             processorSystem.Act(new PlaceCardCommand(X: X, Y: Y, Card: SelectedCard));
             Cards.Remove(SelectedCard);
-            SelectedCard = null;
+        }
+
+        public void RemoveCards(List<Card> toRemove)
+        {
+            if (toRemove == null || !toRemove.Any()) { return; }
+            var remLst = new List<int>();
+            if(this.Cards == null || this.Cards.Count == 0) { return; }
+            for (int i = 0; i < toRemove.Count; i++)
+            {
+                for (int j = 0; j < Cards.Count; j++)
+                {
+                    if (Cards[j].Id.Equals(toRemove[i].Id))
+                    {
+                        remLst.Add(j);
+                    }
+                }
+            }
+            for (int i = 0; i < remLst.Count; i++)
+            {
+                Cards.RemoveAt(remLst[i]);
+            }
         }
     }
 }

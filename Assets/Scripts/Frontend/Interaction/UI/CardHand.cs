@@ -1,9 +1,11 @@
 ﻿using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Frontend.EventProcessing;
 using Frontend.Interaction;
 using GameState;
 using GameState.PlayerCommand;
 using JetBrains.Annotations;
+using LevelGeneration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +18,7 @@ namespace Assets.Scripts.Frontend.Interaction.UI
     {
         public List<UICardBase> Cards = new List<UICardBase>();
 
-        public CardHand Instance;
+        public static CardHand Instance;
 
         public Camera cam;
 
@@ -35,6 +37,8 @@ namespace Assets.Scripts.Frontend.Interaction.UI
         public Transform DrawPosition;
 
         public Transform Container;
+
+        private LevelGenerator lvlGen;
 
         public float RotSpeed = 800;
 
@@ -63,6 +67,7 @@ namespace Assets.Scripts.Frontend.Interaction.UI
         private void Start()
         {
             Instance = this;
+            lvlGen = FindObjectOfType<LevelGenerator>();
         }
 
         public void DrawCards(List<Card> cards)
@@ -101,7 +106,7 @@ namespace Assets.Scripts.Frontend.Interaction.UI
                 var pressed = Cards.Where(c => c.state == UICardBase.CardState.Pressed);
                 foreach (var item in pressed)
                 {
-                    item.state = UICardBase.CardState.Idle;
+                    item.SetState(UICardBase.CardState.Idle);
                 }
             }
         }
@@ -134,7 +139,7 @@ namespace Assets.Scripts.Frontend.Interaction.UI
                 var offset = t * normalSpace;
 
                 var regularTarget = new Vector3(offset * totalSpace, 0, MaxCards - i);
-                var recessedTarget = new Vector3(offset * totalSpace, -600, MaxCards - i);
+                var recessedTarget = new Vector3(offset * totalSpace, -475, MaxCards - i);
 
                 var anyPressed = Cards.Any(c => c.state == UICardBase.CardState.Pressed);
                 var actualTarget = Cards[i].state == UICardBase.CardState.Pressed ? cardSelectedPos.localPosition :
@@ -185,6 +190,14 @@ namespace Assets.Scripts.Frontend.Interaction.UI
 
         public void CardStateChange(UICardBase card, UICardBase.CardState state)
         {
+            if (state == UICardBase.CardState.Idle)
+            {
+                if(!Cards.Any(c => c.state != UICardBase.CardState.Idle))
+                {
+                    Targeting.Instance.ClearActionPlacement();
+                }
+            }
+
             if(state == UICardBase.CardState.Highlighted)
             {
                 var processorSystem = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<GameEventProcessorSystem>();
@@ -194,12 +207,42 @@ namespace Assets.Scripts.Frontend.Interaction.UI
             if(state == UICardBase.CardState.Pressed)
             {
                 CardsController.Instance.SetSelectedCard(card.data);
+                CardToPlay = card;
                 Targeting.Instance.ToggleOn();
             }
         }
 
         public void HighlightCard()
         {
+        }
+
+        internal void UnselectAll()
+        {
+            var pressed = Cards.Where(c => c.state == UICardBase.CardState.Pressed);
+            foreach (var item in pressed)
+            {
+                item.SetState(UICardBase.CardState.Idle);
+            }
+        }
+
+        public async UniTask ConfirmPlay()
+        {
+            var tasks = new List<UniTask>();
+            tasks.Add(CardToPlay.transform.DOMove(targetLerpPos, 0.8f).SetEase(Ease.InCubic).AsyncWaitForCompletion().AsUniTask());
+            tasks.Add(CardToPlay.transform.DOLookAt(Vector3.forward, 0.3f).AsyncWaitForCompletion().AsUniTask());
+            await UniTask.WhenAll(tasks);
+            this.Cards.Remove(CardToPlay);
+            Destroy(CardToPlay.gameObject);
+            CardToPlay = null;
+        }
+
+        private UICardBase CardToPlay;
+
+        private Vector3 targetLerpPos;
+
+        internal void CommitCard(int x, int y)
+        {
+            targetLerpPos = lvlGen.GetTopOfGridCell(x, y);
         }
     }
 }

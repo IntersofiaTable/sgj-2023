@@ -1,8 +1,10 @@
 using Assets.Scripts.Frontend.Interaction;
+using Assets.Scripts.Frontend.Interaction.UI;
 using Cysharp.Threading.Tasks;
 using Frontend.Interaction;
 using GameState;
 using LevelGeneration;
+using System.Linq;
 using UnityEngine;
 
 namespace Frontend.EventProcessing
@@ -23,6 +25,7 @@ namespace Frontend.EventProcessing
 
         public async UniTask HandleUpdateMapState(UpdateMapEvent updateEvt)
         {
+            Debug.Log("Updating Tiles");
             foreach (var tile in updateEvt.UpdatedTiles)
             {
                 var cell = levelGen.GetCell(tile.X, tile.Y);
@@ -32,6 +35,11 @@ namespace Frontend.EventProcessing
                     gc.isPlayerControlled = tile.PlayerInControl;
                 }
             }
+            Debug.Log("Tiles Updated.");
+            await CardHand.Instance.ConfirmPlay();
+            Debug.Log("Play Confirmed.");
+            CardHand.Instance.UnselectAll();
+            Debug.Log("Tiles Unselected.");
         }
 
         public async UniTask HandleEndMapEvent(EndMapEvent endEvt)

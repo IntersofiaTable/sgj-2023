@@ -6,6 +6,7 @@ using GameState.PlayerCommand;
 using LevelGeneration;
 using Unity.Entities;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Frontend.Interaction
 {
@@ -38,8 +39,15 @@ namespace Frontend.Interaction
             var mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             var targetCell = gridGen.GetClosestCell(mouseRay);
-            if(targetCell == null) { return; }
-            if (targetCell is GameCell gameCell)
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                ClearHighlight();
+                return;
+
+            }
+            if (targetCell == null) { ClearHighlight(); return; }
+
+                if (targetCell is GameCell gameCell)
             {
                 if (gameCell != currentHighlightedCell)
                 {
@@ -52,15 +60,15 @@ namespace Frontend.Interaction
                     gameCell.isMouseOver = true;
                 }
 
-                //if (TargetingEnabled)
-                //{
+                if (TargetingEnabled)
+                {
                     if (Input.GetMouseButtonDown(0))
                     {
                         var pos = gridGen.GetCellPosition(gameCell);
                         CardsController.Instance.PlayCurrentCard(pos.x, pos.y);
                         TargetingEnabled = false;
                     }
-                //}
+                }
             }
 
             if (cursor != null)
@@ -70,6 +78,16 @@ namespace Frontend.Interaction
 
             // Plane p = `
             // if(Physics.Raycast(mouseRay.origin, mouseRay.direction))
+
+        }
+
+        private void ClearHighlight()
+        {
+            if (currentHighlightedCell != null)
+            {
+                currentHighlightedCell.isMouseOver = false;
+            }
+            cursor.transform.position = new Vector3(10000, 10000, 0);
 
         }
 
