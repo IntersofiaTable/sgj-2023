@@ -132,7 +132,6 @@ namespace Frontend.Interaction
 
         public void ClearActionPlacement()
         {
-            var hls = CellsToHighlight.ToList();
             gridGen.GetAllCells().ForEach(c => {
                 if (c is GameCell gc)
                 {

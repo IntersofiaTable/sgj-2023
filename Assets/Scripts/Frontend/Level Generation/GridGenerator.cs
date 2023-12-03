@@ -189,12 +189,15 @@ namespace LevelGeneration
 
         internal Cell GetCell(int x, int y)
         {
+            if (x >= cells.GetLength(0) || y >= cells.GetLength(1)) return null;
+            if (cells == null) return null;
             return cells[x, y];
         }
 
         internal List<Cell> GetAllCells()
         {
             List<Cell> ret = new List<Cell>();
+            if (cells == null) return ret;
             foreach (var item in cells)
             {
                 ret.Add(item);

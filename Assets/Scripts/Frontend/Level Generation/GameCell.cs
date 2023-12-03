@@ -55,13 +55,13 @@ namespace LevelGeneration
 
         public void Update()
         {
-            cellIcon.gameObject.SetActive(Card != null);
             currentColor = new Color(
                 Mathf.MoveTowards(currentColor.r, FinalColor.r, 2f * Time.deltaTime),
                 Mathf.MoveTowards(currentColor.g, FinalColor.g, 2f * Time.deltaTime),
                 Mathf.MoveTowards(currentColor.b, FinalColor.b, 2f * Time.deltaTime));
             
             renderers.ForEach(r => r.materials.ToList().ForEach(m => m.SetColor("_BaseColor", currentColor)));
+            cellIcon.gameObject.SetActive(Card != null);
         }
     }
 }

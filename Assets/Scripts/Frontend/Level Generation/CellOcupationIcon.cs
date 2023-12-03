@@ -10,6 +10,7 @@ namespace LevelGeneration
         public Image iconImg;
         public void PopulateFromCard(Card card)
         {
+            if (card == null) return;
             var resource  = CardResources.Instance.GetCardResourceByID(card.Id);
             iconImg.sprite = resource.image;
         }
