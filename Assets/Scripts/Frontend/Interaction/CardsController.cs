@@ -97,5 +97,6 @@ namespace Assets.Scripts.Frontend.Interaction
         {
             await CardHand.Instance.DiscardHand();
         }
+
     }
 }

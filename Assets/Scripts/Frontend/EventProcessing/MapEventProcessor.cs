@@ -56,7 +56,9 @@ namespace Frontend.EventProcessing
         {
             if (AIController.Instance != null)
             {
+                await CardHand.Instance.DiscardHand();
                 await AIController.Instance.SetNewHP(endEvt.AIHealth);
+                await CardHand.Instance.AttackBoss();
             }
         }
 

@@ -10,6 +10,7 @@ using LevelGeneration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Unity.Entities;
 using UnityEngine;
 
@@ -255,6 +256,38 @@ namespace Assets.Scripts.Frontend.Interaction.UI
         internal void CommitCard(int x, int y)
         {
             targetLerpPos = lvlGen.GetTopOfGridCell(x, y);
+        }
+
+        public async UniTask AttackBoss()
+        {
+            var cells =lvlGen.GetAllCells();
+            var cellsWithCards = cells.Select(c =>
+            {
+                if (c is GameCell gc)
+                {
+                    return gc;
+                }
+
+                return null;
+            }).Where(gc => gc != null && gc.Card != null).ToList();
+
+            int cnt = 0;
+            Vector2 delayPerCard = new Vector2(0.22f, 0.04f);
+            float totalDelay = 0;
+            List<UniTask> tasks = new List<UniTask>();
+            Vector2 violence = new Vector2(4f, 12f);
+            foreach (var card in cellsWithCards)
+            {
+                var t = cnt / (float)cellsWithCards.Count();
+                tasks.Add(card.cellIcon.transform.DOMove(AIController.Instance.healthBar.transform.position, 0.4f)
+                    .SetDelay(totalDelay)
+                    .SetEase(Ease.InCubic)
+                    .OnComplete( () => Camera.main.DOShakePosition(0.1f, Mathf.Lerp(violence.x, violence.y, t)))
+                    .AsyncWaitForCompletion()
+                    .AsUniTask());
+                totalDelay += Mathf.Lerp(delayPerCard.x, delayPerCard.y, t);
+            }
+            await UniTask.WhenAll(tasks);
         }
     }
 }
