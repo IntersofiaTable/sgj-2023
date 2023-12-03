@@ -31,7 +31,7 @@ namespace Assets.Scripts.Frontend.Interaction
             {
                 MaxHP = hp;
             }
-            HP = HP * (int)0.6f;
+            HP = hp;
             healthBar.LerpToState(HealthPercentage);
             Debug.Log($"hp is {hp}");
         }
