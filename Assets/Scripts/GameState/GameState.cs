@@ -17,7 +17,7 @@ namespace GameState
         public bool HaveToDrawBaba => BabasToDraw > 0;
         public int BabasToDraw { get; set; } = 1;
 
-        public int AIHealth { get; set; } = 100;
+        public int AIHealth { get; set; } = 50;
         public int MaxMaps { get; set; } = 5;
     }
 
