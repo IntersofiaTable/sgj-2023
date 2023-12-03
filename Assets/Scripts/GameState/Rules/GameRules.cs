@@ -61,6 +61,7 @@ namespace GameState
         public override (bool, GameState) StartGame(GameState state)
         {
             gameEventEmitter.Emit(new GameStartedEvent());
+            gameEventEmitter.Emit(new EndMapEvent(state.AIHealth));
             (_, state) = LoadMap(state);
             return (true, state);
         }
@@ -150,11 +151,11 @@ namespace GameState
                 foreach (var control in command.Card.ControlZone)
                 {
                     int checkY = tile.Y + control.Y;
-                    if (checkY > MapY) continue;
+                    if (checkY >= MapY) continue;
                     if (checkY < 0) continue;
 
                     int checkX = tile.X + control.X;
-                    if (checkX > MapX) continue;
+                    if (checkX >= MapX) continue;
                     if (checkX < 0) continue;
 
                     var controlTile = state.Map.Tiles[checkY][checkX];
@@ -181,11 +182,11 @@ namespace GameState
                 foreach (var control in command.Card.ControlZone)
                 {
                     int checkY = tile.Y + control.Y;
-                    if (checkY > MapY) continue;
+                    if (checkY >= MapY) continue;
                     if (checkY < 0) continue;
 
                     int checkX = tile.X + control.X;
-                    if (checkX > MapX) continue;
+                    if (checkX >= MapX) continue;
                     if (checkX < 0) continue;
 
                     var controlTile = state.Map.Tiles[checkY][checkX];
