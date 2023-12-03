@@ -60,6 +60,6 @@ jobs:
         env:
             BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
             CHANNEL: unity-webgl
-            ITCH_GAME: sgj-2023
+            ITCH_GAME: sgj-2023-cybertursh
             ITCH_USER: ace777
             PACKAGE: build/WebGL
