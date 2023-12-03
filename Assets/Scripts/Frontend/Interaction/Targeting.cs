@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Frontend.Interaction;
 using Frontend.EventProcessing;
@@ -19,7 +20,11 @@ namespace Frontend.Interaction
         public static Targeting Instance;
 
         public bool TargetingEnabled;
-        
+
+        public List<(int x, int y)> highlightedSpots = new List<(int x, int y)>();
+
+        public IEnumerable<Cell> CellsToHighlight => highlightedSpots.Select(p => gridGen.GetCell(p.x, p.y)).ToList();
+
         private void Start()
         {
             Instance = this;
@@ -29,6 +34,7 @@ namespace Frontend.Interaction
         public void Update()
         {
             GetMouseInput();
+            UpdateHighlighting();
         }
 
         private GameCell currentHighlightedCell;
@@ -58,10 +64,21 @@ namespace Frontend.Interaction
 
                     currentHighlightedCell = gameCell;
                     gameCell.isMouseOver = true;
+
                 }
 
                 if (TargetingEnabled)
                 {
+                    if ( CardsController.Instance.SelectedCard != null)
+                    {
+                        var currentIdx = gridGen.GetCellPosition(gameCell);
+                        highlightedSpots = CardsController.Instance.SelectedCard.ControlZone.Select(idx =>
+                            (idx.X + currentIdx.x, currentIdx.y + idx.Y)).ToList();
+                    }
+                    else
+                    {
+                        highlightedSpots.Clear();
+                    }
                     if (Input.GetMouseButtonDown(0))
                     {
                         var pos = gridGen.GetCellPosition(gameCell);
@@ -79,6 +96,16 @@ namespace Frontend.Interaction
             // Plane p = `
             // if(Physics.Raycast(mouseRay.origin, mouseRay.direction))
 
+        }
+
+        public void UpdateHighlighting()
+        {
+            var highlightSpots = CellsToHighlight.ToList();
+            gridGen.GetAllCells().ForEach(c => {
+                if (c is GameCell gc)
+                {
+                    gc.isHighlighted = highlightSpots.Contains(c);
+                } });
         }
 
         private void ClearHighlight()
@@ -105,7 +132,12 @@ namespace Frontend.Interaction
 
         public void ClearActionPlacement()
         {
-            gridGen.GetAllCells().ForEach(c => { if (c is GameCell gc) { gc.isActionPreview = false; } });
+            var hls = CellsToHighlight.ToList();
+            gridGen.GetAllCells().ForEach(c => {
+                if (c is GameCell gc)
+                {
+                    gc.isActionPreview = false;
+                } });
         }
 
         public void ToggleOn()
