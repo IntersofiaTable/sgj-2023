@@ -68,6 +68,7 @@ namespace Assets.Scripts.Frontend.Interaction
             if(SelectedCard == null) { Debug.Log("No Card Selected"); return; }
             var processorSystem = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<GameEventProcessorSystem>();
             processorSystem.Act(new PlaceCardCommand(X: X, Y: Y, Card: SelectedCard));
+            CardHand.Instance.CommitCard(X, Y);
             Cards.Remove(SelectedCard);
         }
 
@@ -90,6 +91,11 @@ namespace Assets.Scripts.Frontend.Interaction
             {
                 Cards.RemoveAt(remLst[i]);
             }
+        }
+
+        public async UniTask HandleNewTurn()
+        {
+            await CardHand.Instance.DiscardHand();
         }
     }
 }

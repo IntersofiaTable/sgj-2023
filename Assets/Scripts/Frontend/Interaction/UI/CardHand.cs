@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using Assets.Scripts.Frontend.Config;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Frontend.EventProcessing;
 using Frontend.Interaction;
@@ -59,9 +60,20 @@ namespace Assets.Scripts.Frontend.Interaction.UI
         {
         }
 
-        public void DiscardHand()
+        public async UniTask DiscardHand()
         {
-
+            List<UniTask> tasks = new List<UniTask>();
+            foreach (var card in Cards)
+            {
+                tasks.Add(card.transform.DOMove(DiscardTransform.position, AnimationTimes.DISCARD_HAND).AsyncWaitForCompletion().AsUniTask());
+                tasks.Add(card.transform.DORotate(DiscardTransform.rotation.eulerAngles, AnimationTimes.DISCARD_HAND).AsyncWaitForCompletion().AsUniTask());
+            }
+            await UniTask.WhenAll(tasks);
+            foreach (var c in Cards)
+            {
+                Destroy(c.gameObject);
+            }
+            Cards.Clear();
         }
 
         private void Start()

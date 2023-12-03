@@ -107,6 +107,7 @@ namespace Frontend.EventProcessing
                         CoLogger.Log($"turnUpdateEvent {nameof(TurnUpdateEvent)}");
                         //thing.ProcessGameStartEvent(cardOptionsResponse);
                         Debug.Log($"Turn # {turnUpdateEvent.Turn}");
+                        await cardsController.HandleNewTurn();
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
 
