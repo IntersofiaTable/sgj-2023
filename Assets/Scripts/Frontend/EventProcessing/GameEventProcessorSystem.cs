@@ -92,7 +92,7 @@ namespace Frontend.EventProcessing
                     {
                         CoLogger.Log($"drawCardsEvent {nameof(DrawCardsEvent)}");
                         //thing.ProcessGameStartEvent(drawCardsEvent);
-                        await cardsController.HandleCardsEvent(drawCardsEvent);
+                        cardsController.HandleCardsEvent(drawCardsEvent);
                         currentlyProcessingEvent.SetState(ProcessingState.Completed);
                     }
                     if (newArgs.Event is CardOptionsResponse cardOptionsResponse)

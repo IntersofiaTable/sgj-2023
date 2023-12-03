@@ -19,5 +19,6 @@ namespace GameState
 
     public sealed record CardOptionsResponse(Card Card, (int X, int Y)[] ValidPlacements) : IGameEvent { }
 
+
     public sealed record TurnUpdateEvent(int Turn): IGameEvent {}
 }

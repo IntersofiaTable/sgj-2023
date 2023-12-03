@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 850103326388378930}
   - component: {fileID: 3216428227334746398}
   - component: {fileID: 7731395000689213580}
+  - component: {fileID: 2516504474412964754}
   m_Layer: 5
   m_Name: GrannyCard
   m_TagString: Untagged
@@ -34,11 +35,11 @@ RectTransform:
   - {fileID: 4653676291433782969}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -640, y: 35}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: -520, y: 225.20001}
   m_SizeDelta: {x: 480, y: 641.6}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &3216428227334746398
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -77,6 +78,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2516504474412964754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3367060551674442195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc02aa407cd366f4badaa1403b44a863, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TxtCardName: {fileID: 8231387184789695268}
+  ImgCard: {fileID: 8732441726722939197}
+  CardDescription: {fileID: 0}
+  state: 0
 --- !u!1 &3920479274658286621
 GameObject:
   m_ObjectHideFlags: 0

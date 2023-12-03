@@ -16,6 +16,8 @@ namespace Frontend.Interaction
         public GameObject cursor;
 
         public static Targeting Instance;
+
+        public bool TargetingEnabled;
         
         private void Start()
         {
@@ -50,11 +52,14 @@ namespace Frontend.Interaction
                     gameCell.isMouseOver = true;
                 }
 
-                if (Input.GetMouseButtonDown(0))
+                if (TargetingEnabled)
                 {
-                    var processorSystem = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<GameEventProcessorSystem>();
-                    var pos = gridGen.GetCellPosition(gameCell);
-                    processorSystem.Act(new PlaceCardCommand(X: pos.x, Y: pos.y, Card: CardsController.Instance.Cards.First())) ;
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        var pos = gridGen.GetCellPosition(gameCell);
+                        CardsController.Instance.PlayCurrentCard(pos.x, pos.y);
+                        TargetingEnabled = false;
+                    }
                 }
             }
 
@@ -83,6 +88,11 @@ namespace Frontend.Interaction
         public void ClearActionPlacement()
         {
             gridGen.GetAllCells().ForEach(c => { if (c is GameCell gc) { gc.isActionPreview = false; } });
+        }
+
+        public void ToggleOn()
+        {
+            TargetingEnabled = true;
         }
     }
 }

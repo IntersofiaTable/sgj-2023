@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 4553646940314340852}
   - component: {fileID: 3644097222038983036}
   - component: {fileID: 6646462040993632914}
+  - component: {fileID: 5792242471247284395}
   m_Layer: 5
   m_Name: VeggieCard
   m_TagString: Untagged
@@ -109,11 +110,11 @@ RectTransform:
   - {fileID: 289585069039026618}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -640, y: 35}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -520, y: -285.8}
   m_SizeDelta: {x: 480, y: 641.6}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &3644097222038983036
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -152,6 +153,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5792242471247284395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2277771926653416860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0d44f42086335a42a373e79866c0f84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TxtCardName: {fileID: 9124093151536888542}
+  ImgCard: {fileID: 9082875956319613606}
+  CardDescription: {fileID: 0}
+  state: 0
 --- !u!1 &7856966398946437322
 GameObject:
   m_ObjectHideFlags: 0
