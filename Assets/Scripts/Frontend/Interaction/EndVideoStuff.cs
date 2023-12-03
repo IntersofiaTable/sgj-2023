@@ -13,7 +13,6 @@ namespace Assets.Scripts.Frontend.Interaction
             vp.loopPointReached += source =>
             {
                 SceneManager.LoadScene("SampleScene");
-
             };
         }
     }
