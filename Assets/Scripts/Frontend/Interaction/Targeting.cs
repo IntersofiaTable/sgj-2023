@@ -52,15 +52,15 @@ namespace Frontend.Interaction
                     gameCell.isMouseOver = true;
                 }
 
-                if (TargetingEnabled)
-                {
+                //if (TargetingEnabled)
+                //{
                     if (Input.GetMouseButtonDown(0))
                     {
                         var pos = gridGen.GetCellPosition(gameCell);
                         CardsController.Instance.PlayCurrentCard(pos.x, pos.y);
                         TargetingEnabled = false;
                     }
-                }
+                //}
             }
 
             if (cursor != null)

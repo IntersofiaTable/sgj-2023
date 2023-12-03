@@ -32,9 +32,9 @@ namespace Assets.Scripts.Frontend.Interaction
 
         public void SetSelectedCard(Card card)
         {
-            if (Cards.Contains(card))
+            if (Cards.Any(c => c.Id == card.Id))
             {
-                SelectedCard = card;
+                SelectedCard = Cards.First(c => c.Id == card.Id);
             }
         }
 
@@ -59,6 +59,7 @@ namespace Assets.Scripts.Frontend.Interaction
 
         public void PlayCurrentCard(int X, int Y)
         {
+            if(SelectedCard == null) { return; }
             var processorSystem = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<GameEventProcessorSystem>();
             processorSystem.Act(new PlaceCardCommand(X: X, Y: Y, Card: SelectedCard));
             Cards.Remove(SelectedCard);
