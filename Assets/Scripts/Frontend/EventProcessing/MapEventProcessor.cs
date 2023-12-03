@@ -41,6 +41,7 @@ namespace Frontend.EventProcessing
             await CardHand.Instance.ConfirmPlay();
             Debug.Log("Play Confirmed.");
             CardHand.Instance.UnselectAll();
+            Targeting.Instance.ClearActionPlacement();
             Debug.Log("Tiles Unselected.");
         }
 
