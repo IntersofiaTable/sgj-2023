@@ -10,6 +10,6 @@ public class MenuScript : MonoBehaviour
 
     public void LoadIntro()
     {
-        SceneManager.LoadScene("Intro");
+        SceneManager.LoadScene("Intro", LoadSceneMode.Single);
     }
 }
