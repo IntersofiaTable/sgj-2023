@@ -5,7 +5,7 @@ public class MenuScript : MonoBehaviour
 {
     public void LoadGame()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
     }
 
     public void LoadIntro()

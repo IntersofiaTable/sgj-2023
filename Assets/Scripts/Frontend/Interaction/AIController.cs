@@ -12,8 +12,14 @@ namespace Assets.Scripts.Frontend.Interaction
     {
         public int HP;
 
+        public int MaxHP = 0;
+
+        public float HealthPercentage => HP / (float)MaxHP;
+        
         public static AIController Instance;
 
+        public AIHealthBar healthBar;
+        
         private void Start()
         {
             Instance = this;
@@ -21,6 +27,12 @@ namespace Assets.Scripts.Frontend.Interaction
 
         public async UniTask SetNewHP(int hp)
         {
+            if (MaxHP == 0)
+            {
+                MaxHP = hp;
+            }
+            HP = hp;
+            healthBar.LerpToState(HealthPercentage);
             Debug.Log($"hp is {hp}");
         }
     }
