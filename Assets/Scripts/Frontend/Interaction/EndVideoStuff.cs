@@ -15,5 +15,13 @@ namespace Assets.Scripts.Frontend.Interaction
                 SceneManager.LoadScene("SampleScene");
             };
         }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                SceneManager.LoadScene("SampleScene");
+            }
+        }
     }
 }
