@@ -1,29 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Frontend.Config;
 using Assets.Scripts.Utilities;
 using Frontend.EventProcessing;
 using GameState;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 namespace LevelGeneration
 {
-
-    public class CellOcupationIcon : MonoBehaviour
-    {
-        public Image iconImg;
-        public void PopulateFromCard(Card card)
-        {
-            var resource  = CardResources.Instance.GetCardResourceByID(card.Id);
-            iconImg.sprite = resource.image;
-        }
-    }
     public class GameCell : Cell
     {
-        public 
-        
         public bool isMouseOver;
 
         public bool isActionPreview;
@@ -33,6 +20,8 @@ namespace LevelGeneration
         public bool isPlayerControlled;
 
         public float HighlightAmount = 1.5f;
+
+        public CellOcupationIcon cellIcon;
 
         public Color TargetColor => 
             isHighlighted       ? GameColors.Highlighted :
@@ -48,6 +37,7 @@ namespace LevelGeneration
 
         public Color currentColor;
 
+        public float offsetY = 0.4f;
 
         private List<Renderer> renderers;
 
@@ -56,14 +46,22 @@ namespace LevelGeneration
             renderers = this.GetAllRenderers();
         }
 
+        public void SetData(Card card)
+        {
+            Card = card;
+            this.cellIcon.PopulateFromCard(card);
+            this.cellIcon.transform.position = transform.position + new Vector3(0, this.GetCompleteBounds().size.y + offsetY, 0);
+        }
+
         public void Update()
         {
-                currentColor = new Color(
-                    Mathf.MoveTowards(currentColor.r, FinalColor.r, 2f * Time.deltaTime),
-                    Mathf.MoveTowards(currentColor.g, FinalColor.g, 2f * Time.deltaTime),
-                    Mathf.MoveTowards(currentColor.b, FinalColor.b, 2f * Time.deltaTime));
-                
-                renderers.ForEach(r => r.materials.ToList().ForEach(m => m.SetColor("_BaseColor", currentColor)));
+            cellIcon.gameObject.SetActive(Card != null);
+            currentColor = new Color(
+                Mathf.MoveTowards(currentColor.r, FinalColor.r, 2f * Time.deltaTime),
+                Mathf.MoveTowards(currentColor.g, FinalColor.g, 2f * Time.deltaTime),
+                Mathf.MoveTowards(currentColor.b, FinalColor.b, 2f * Time.deltaTime));
+            
+            renderers.ForEach(r => r.materials.ToList().ForEach(m => m.SetColor("_BaseColor", currentColor)));
         }
     }
 }

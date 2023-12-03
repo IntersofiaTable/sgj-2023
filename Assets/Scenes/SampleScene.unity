@@ -2777,7 +2777,7 @@ MonoBehaviour:
   MoveSpeedCam: 25
   zStep: 10
   MaxCards: 10
-  CardOffsetRange: {x: 80, y: 20}
+  CardOffsetRange: {x: 140, y: 40}
   CardRotationOffset: {x: 0, y: 0, z: 0, w: 1}
 --- !u!1 &1719575829
 GameObject:

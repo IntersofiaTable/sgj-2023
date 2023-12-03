@@ -33,6 +33,7 @@ namespace Frontend.EventProcessing
                 var cell = levelGen.GetCell(tile.X, tile.Y);
                 if(cell is GameCell gc)
                 {
+                    gc.SetData(tile.card);
                     gc.Card = tile.card;
                     gc.isPlayerControlled = tile.PlayerInControl;
                 }
